@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     let div = document.querySelector("#api_status");
-    fetch("http://172.22.128.139:5001/api/v1/places_search/", {
+    fetch("http://0.0.0.0:5001/api/v1/places_search/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
           sectionPlace.appendChild(article);
         }
       })
-      .then((response) => console.log(JSON.stringify(response)))
       .catch(function (error) {
         console.log(error);
       });
