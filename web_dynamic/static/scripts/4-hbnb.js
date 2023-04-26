@@ -1,21 +1,32 @@
 document.addEventListener("DOMContentLoaded", () => {
   let listAmenities = [];
+  let listIdofAmen = [];
   $("input[type=checkbox]").prop("checked", false); // Joaco credits :)
   $("input[type=checkbox]").change(function () {
     if (this.checked) {
       listAmenities.push($(this).attr("data-name"));
+      listIdofAmen.push($(this).attr("data-id"));
     } else {
       listAmenities.splice(listAmenities.indexOf($(this).attr("data-name")), 1);
+      listIdofAmen.splice(listIdofAmen.indexOf($(this).attr("data-id")), 1);
     }
     $(".amenities > h4").text(listAmenities.join(", "));
   });
 
-  fetch("http://172.22.128.139:5001/api/v1/places_search/", {
+  let body_data = '{}';
+  const btn = document.querySelector('button');
+    btn.addEventListener('click', function(event){
+    if (listIdofAmen.length > 0) {
+    body_data = {'amenities': listIdofAmen};
+    }
+  });
+
+  fetch("http://0.0.0.0:5001/api/v1/places_search/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: "{}",
+    body: body_data,
   })
     .then((response) => response.json())
     .then((data) => {
@@ -43,9 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
           ${place.description ? place.description : ""}
             </div>
       `;
-
-      console.log(place.amenities)
-
         //append the article template
         sectionPlace.appendChild(article);
       }
@@ -53,22 +61,4 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(function (error) {
       console.log(error);
     });
-
-  const button = document.querySelector("button");
-  button.onclick = () => {
-    fetch("http://172.22.128.139:5001/api/v1/places_search/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: "{}",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
 });
